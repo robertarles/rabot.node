@@ -1,0 +1,28 @@
+{
+  "name": "rabot.node",
+  "version": "1.0.0",
+  "description": "Implementation of Rabot in Node JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "test:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/robertarles/rabot.node.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "rabot",
+    "daemon"
+  ],
+  "author": "robert arles",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/robertarles/rabot.node/issues"
+  },
+  "homepage": "https://github.com/robertarles/rabot.node#readme",
+  "dependencies": {
+    "find-my-iphone": "^1.1.1"
+  }
+}
