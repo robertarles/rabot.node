@@ -19,31 +19,24 @@ exports.retrieveCredentials = ()=>{
 
 
 exports.getLocation = (deviceName)=>{
-    let location = {isSet: false, message: 'set me!'};
-    try{
-        icloud.getDevices(function(error, devices) {
-            var device;
-            let ourDevicesSample = ['iPhone ra','iPad ra','sinspare-7','ambp','mini','iPhone AA','ambp', 'Andrea\'s iPad', 'Katelyn\'s iPhone', 'Robert’s MacBook Pro'];
-            if(error){
-                throw(error);
-            }else{
-                devices.forEach((device)=>{
-                    try{
-                        if(device.name.includes(deviceName)){
-                            location = device.location;
-                        }
-                    }catch(e){
-                        console.error('getLocation caught exception while iterating devices')
-                        console.dir(e);
+    icloud.getDevices(function(error, devices) {
+        var device;
+        let ourDevicesSample = ['iPhone ra','iPad ra','sinspare-7','ambp','mini','iPhone AA','ambp', 'Andrea\'s iPad', 'Katelyn\'s iPhone', 'Robert’s MacBook Pro'];
+        if(error){
+            throw(error);
+        }else{
+            devices.forEach((device)=>{
+                try{
+                    if(device.name.includes(deviceName)){
+                        exports.writeLocation(device.location);
                     }
-                });
-            }
-        });
-    }catch(e){
-        console.error('getLocation caught exception while trying to icloud.getDevices');
-        console.dir(e);
-    }
-    return(location);
+                }catch(e){
+                    console.error('getLocation caught exception while iterating devices')
+                    console.dir(e);
+                }
+            });
+        }
+    });
 }
 
 exports.writeLocation = (location)=>{
@@ -57,5 +50,4 @@ exports.writeLocation = (location)=>{
 }
 
 exports.retrieveCredentials();
-let location = exports.getLocation("iPhone ra");
-exports.writeLocation(location);
+exports.getLocation("iPhone ra");
