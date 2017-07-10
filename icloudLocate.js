@@ -3,7 +3,7 @@ const os = require('os')
 var icloud = require("find-my-iphone").findmyphone;
 
 const icloudConfFile = `${os.homedir()}/.rabot/icloud.conf`;
-const iphoneLocationFile = `${os.homedir()}/.rabot/location.json`;
+const iphoneLocationFile = `${os.homedir()}/.rabot/iphone_ra_location.json`;
 icloud.apple_id = "";
 icloud.password = "";
 
@@ -25,18 +25,20 @@ exports.getLocation = (deviceName)=>{
         if(error){
             throw(error);
         }else{
-            devices.forEach((device)=>{
-                try{
-                    if(device.name.includes(deviceName)){
-                        exports.writeLocation(device.location);
-                    }
-                }catch(e){
-                    console.error('getLocation caught exception while iterating devices')
-                    console.dir(e);
-                }
-            });
+            devices.forEach(exports.saveDeviceLocation(device, deviceName));
         }
     });
+}
+
+exports.saveDeviceLocation = (device, deviceName)=>{
+    try{
+        if(device.name.includes(deviceName)){
+            exports.writeLocation(device.location);
+        }
+    }catch(e){
+        console.error('getLocation caught exception while iterating devices')
+        console.dir(e);
+    }
 }
 
 exports.writeLocation = (location)=>{
