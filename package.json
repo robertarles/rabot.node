@@ -1,28 +1,26 @@
 {
-  "name": "rabot.node",
+  "name": "node.scratch",
   "version": "1.0.0",
-  "description": "Implementation of Rabot in Node JS",
+  "description": "just a scratch area",
   "main": "index.js",
   "scripts": {
-    "test": "test:all"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/robertarles/rabot.node.git"
-  },
-  "keywords": [
-    "node",
-    "js",
-    "rabot",
-    "daemon"
-  ],
-  "author": "robert arles",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/robertarles/rabot.node/issues"
-  },
-  "homepage": "https://github.com/robertarles/rabot.node#readme",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "find-my-iphone": "^1.1.1"
+    "find-my-iphone": "^1.1.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
   }
 }
