@@ -17,7 +17,6 @@ exports.retrieveCredentials = ()=>{
     }
 }
 
-
 exports.getLocation = (deviceName)=>{
     icloud.getDevices(function(error, devices) {
         var device;
