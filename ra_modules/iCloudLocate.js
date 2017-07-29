@@ -1,9 +1,10 @@
 'use strict';
 const fs = require('fs');
 const os = require('os') ;
+const rp = require('request-promise');
 var icloud = require('find-my-iphone').findmyphone;
 
-const icloudConfFile = `${os.homedir()}/.rabot/icloud.conf`;
+const icloudConfFile = `${os.homedir()}/.rabot/icloudconfig.json`;
 const iphoneLocationFile = `${os.homedir()}/.rabot/iphone_ra_location.json`;
 icloud.apple_id = '';
 icloud.password = '';
@@ -11,8 +12,9 @@ icloud.password = '';
 exports.loadCredentials = loadCredentials;
 function loadCredentials(){
   try {
-    let icloudConf = fs.readFileSync(icloudConfFile).toString();
-    [icloud.apple_id, icloud.password] = icloudConf.trim().split(',');
+    let icloudConf = JSON.parse(fs.readFileSync(icloudConfFile).toString());
+    icloud.apple_id = icloudConf.apple_id;
+    icloud.password = icloudConf.password;
   } catch (e) {
     console.error('retrieveCredentials caught exception');
     console.dir(e);
@@ -33,16 +35,16 @@ async function getLocation(deviceName){
         if(error){
             throw({message:error, stack:''});
         }else{
-            devices.forEach(saveDeviceLocation(device, deviceName));
+            devices.forEach(function(device){
+              saveDeviceLocation(device, deviceName);
+            });
         }
     });
   }catch(e){
       console.error(`getLocation caught an error\n\t${e.message}`);
       throw({message: `getLocation caught an error\n\t${e.message}`, stack: e.stack});
   }
-  console.log('other');
 }
-
 
 exports.saveDeviceLocation = saveDeviceLocation;
 function saveDeviceLocation(device, deviceName){
