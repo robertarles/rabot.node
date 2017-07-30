@@ -22,9 +22,9 @@ function loadCredentials(){
 }
 
 
-exports.getLocation = getLocation
-async function getLocation(deviceName){
-    var deviceList;
+exports.recordLocation = recordLocation
+async function recordLocation(deviceName){
+  var currentLocation;
   try{
     if(icloud.apple_id === '' || icloud.password === ''){
         loadCredentials();
@@ -36,7 +36,11 @@ async function getLocation(deviceName){
             throw({message:error, stack:''});
         }else{
             devices.forEach(function(device){
-              saveDeviceLocation(device, deviceName);
+              // only save the device (by deviceName) that we specified
+              if(device.name.includes(deviceName)){
+                currentLocation = device.location;
+                saveDeviceLocationToFile(device, deviceName);
+              }
             });
         }
     });
@@ -46,12 +50,10 @@ async function getLocation(deviceName){
   }
 }
 
-exports.saveDeviceLocation = saveDeviceLocation;
-function saveDeviceLocation(device, deviceName){
+exports.saveDeviceLocationToFile = saveDeviceLocationToFile;
+function saveDeviceLocationToFile(device, deviceName){
   try{
-    if(device.name.includes(deviceName)){
-      fs.writeFileSync(iphoneLocationFile, JSON.stringify(device.location));
-    }
+    fs.writeFileSync(iphoneLocationFile, JSON.stringify(device.location));
   }catch(e){
     console.error('saveDeviceLocation caught exception while iterating devices')
     console.error(e.message);
@@ -59,5 +61,40 @@ function saveDeviceLocation(device, deviceName){
   }
 }
 
-//loadCredentials();
-//getLocation("iPhone ra");
+exports.readDeviceLocation = readDeviceLocation;
+function readDeviceLocation(device, deviceName){
+  try{
+    let deviceLocation = JSON.parse(fs.readFileSync(iphoneLocationFile));
+    return(deviceLocation);
+  }catch(e){
+    console.error('readDeviceLocation caught an exception')
+    console.error(e.message);
+    console.error(e.stack);
+  }
+}
+
+exports.haversine = haversine;
+function haversine (start, end) {
+    // var radii = {
+    //   km:    6371,
+    //   mile:  3960,
+    //   meter: 6371000,
+    //   nmi:   3440
+    // }
+    var R = 3960;  //miles
+
+    var dLat = toRad(end.latitude - start.latitude)
+    var dLon = toRad(end.longitude - start.longitude)
+    var lat1 = toRad(start.latitude)
+    var lat2 = toRad(end.latitude)
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2)
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+
+    return R * c
+}
+
+function toRad (num) {
+    return num * Math.PI / 180
+}

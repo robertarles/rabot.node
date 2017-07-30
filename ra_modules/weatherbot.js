@@ -10,9 +10,13 @@ let weatherConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/weatherCo
  * @param {*} config Weather service config object
  */
 exports.getForecast=getForecast;
-async function getForecast(location="34.1129745,-117.1628703", config=weatherConfig){
+async function getForecast(location, config=weatherConfig){
     try{
-        let localizedURL = config.wunderground.apiURL.replace('[LOCATION]', location);
+        let weatherLocation = location;
+        if('latitude' in location){ // did we get a coords object?
+            weatherLocation = `${location.latitude},${location.longitude}`
+        }
+        let localizedURL = config.wunderground.apiURL.replace('[LOCATION]', weatherLocation);
         let requestResp = {};
         var options = {
             method: 'GET',
@@ -32,7 +36,7 @@ async function getForecast(location="34.1129745,-117.1628703", config=weatherCon
                 requestResp = error;
             });
         let forecast = requestResp.forecast.simpleforecast.forecastday[1];
-        let coords = {latitude:location.split(',')[0],longitude:location.split(',')[1]}
+        let coords = {latitude:weatherLocation.split(',')[0],longitude:weatherLocation.split(',')[1]}
         let locality = await getLocalityByCoords(coords);
         // add locality to forecast
         forecast.city = locality.location.nearby_weather_stations.pws.station[0].city;
