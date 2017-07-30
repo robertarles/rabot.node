@@ -1,3 +1,4 @@
+'use strict;'
 let fs = require('fs');
 let os = require('os');
 let slackbot = require('./ra_modules/slackbot');
@@ -12,7 +13,7 @@ let rabotConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/rabotConfig
 if(argv._.includes('locationCheck')){
     locationCheck();
 }
-if(argv._.includes('weatherCheck')>=0){
+if(argv._.includes('weatherCheck')){
     weatherCheck();
 }
 

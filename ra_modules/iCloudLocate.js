@@ -4,7 +4,7 @@ const os = require('os') ;
 const rp = require('request-promise');
 var icloud = require('find-my-iphone').findmyphone;
 
-const icloudConfFile = `${os.homedir()}/.rabot/icloudconfig.json`;
+const icloudConfFile = `${os.homedir()}/.rabot/icloudConfig.json`;
 const iphoneLocationFile = `${os.homedir()}/.rabot/iphone_ra_location.json`;
 icloud.apple_id = '';
 icloud.password = '';

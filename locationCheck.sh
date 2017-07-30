@@ -1,4 +1,4 @@
 #!/bin/bash
 BASEDIR=$(dirname "$0")
 pushd $BASEDIR
-node index.js locationCheck
+/usr/local/bin/node index.js locationCheck

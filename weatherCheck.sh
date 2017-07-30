@@ -1,4 +1,4 @@
 #!/bin/bash
 BASEDIR=$(dirname "$0")
 pushd $BASEDIR
-node index.js weatherCheck
+/usr/local/bin/node index.js weatherCheck
