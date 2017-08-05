@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js weatherCheck"
+    "start": "node api.js",
+    "start:cli": "node index.js weatherCheck"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.15.3",
     "find-my-iphone": "^1.1.1",
     "minimist": "^1.2.0",
     "request": "^2.81.0",

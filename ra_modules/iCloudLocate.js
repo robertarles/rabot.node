@@ -29,7 +29,8 @@ async function recordLocation(deviceName){
     if(icloud.apple_id === '' || icloud.password === ''){
         loadCredentials();
     }
-    icloud.getDevices(function(error, devices) {
+    let savedDevice = {};
+    await icloud.getDevices(function(error, devices) {
         var device;
         let ourDevicesSample = ['iPhone ra','iPad ra','sinspare-7','ambp','mini','iPhone AA','ambp', 'Andrea\'s iPad', 'Katelyn\'s iPhone', 'Robert’s MacBook Pro'];
         if(error){
@@ -40,16 +41,32 @@ async function recordLocation(deviceName){
               if(device.name.includes(deviceName)){
                 currentLocation = device.location;
                 saveDeviceLocationToFile(device, deviceName);
+                device.savedLocationToFile=true;
+                savedDevice = device;
               }
             });
         }
     });
+    return(savedDevice);
   }catch(e){
       console.error(`getLocation caught an error\n\t${e.message}`);
       throw({message: `getLocation caught an error\n\t${e.message}`, stack: e.stack});
   }
 }
 
+exports.readDeviceLocationFromFile = readDeviceLocationFromFile;
+function readDeviceLocationFromFile(device, deviceName){
+  try{
+    let location = JSON.parse(fs.readFileSync(iphoneLocationFile));
+    console.log('timestamp', location.timeStamp);
+    location.date = new Date(location.timeStamp).toString();
+    return(location);
+  }catch(e){
+    console.error('saveDeviceLocation caught exception while iterating devices')
+    console.error(e.message);
+    console.error(e.stack);
+  }
+}
 exports.saveDeviceLocationToFile = saveDeviceLocationToFile;
 function saveDeviceLocationToFile(device, deviceName){
   try{

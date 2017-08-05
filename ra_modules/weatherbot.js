@@ -2,8 +2,38 @@ let rp = require('request-promise');
 let fs = require('fs');
 let os = require('os');
 let winston = require('winston');
+let iCloudLocate = require('./iCloudLocate');
 
 let weatherConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/weatherConfig.json`));
+let currentLocation = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`));
+let rabotConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/rabotConfig.json`));
+
+exports.getMyForecastMessage=getMyForecastMessage;
+async function getMyForecastMessage(){
+    try{
+        let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
+        // get weather for home, unles I've travelled beyond my commute range.
+        let weatherLocation = rabotConfig.home.coordinates;
+        if(currentDistanceFromHome > rabotConfig.max_commute){
+            weatherLocation = currentLocation;
+        }
+        let forecast = await getForecast(weatherLocation);
+        if(forecast.hasOwnProperty('error')){s
+            winston.error(`Error reading forecast:\n${forecast.error}`);
+            return(1);
+        }
+        let myForecast = {
+            text:`Tomorrow in ${forecast.city}, ${forecast.state}:\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`,
+            icon_url: forecast.icon_url};
+        return(myForecast);
+    }catch(e){
+        winston.error('Exception caught in getMyForecast()!');
+        winston.error(`${e.message}`);
+        winston.error(`${e.stack}`);
+        return(1);
+    }
+}
+
 /**
  * 
  * @param {*} location String, "lat,lon" The default of "34.1129745,-117.1628703" is highland, ca
