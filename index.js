@@ -45,7 +45,7 @@ async function weatherCheck(){
             winston.error(`Error reading forecast:\n${forecast.error}`);
             return(1);
         }
-        let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state}:\nLow:${forecast.low.fahrenheit}\nHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
+        let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state}:\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
         let iconURL = forecast.icon_url;
         let slackbotResponse = await slackbot.send(`${forecastSummary}`, iconURL);
         if(slackbotResponse!=='ok'){
