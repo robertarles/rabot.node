@@ -14,7 +14,7 @@ async function getMyForecastMessage(){
         let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
         // get weather for home, unles I've travelled beyond my commute range.
         let weatherLocation = rabotConfig.home.coordinates;
-        if(currentDistanceFromHome > rabotConfig.max_commute){
+        if(currentDistanceFromHome > rabotConfig.home.max_commute_range){
             weatherLocation = currentLocation;
         }
         let forecast = await getForecast(weatherLocation);
@@ -24,6 +24,8 @@ async function getMyForecastMessage(){
         }
         let myForecast = {
             text:`Tomorrow in ${forecast.city}, ${forecast.state}:\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`,
+            distance_from_home: currentDistanceFromHome,
+            max_commute_range: rabotConfig.home.max_commute_range,
             icon_url: forecast.icon_url};
         return(myForecast);
     }catch(e){
