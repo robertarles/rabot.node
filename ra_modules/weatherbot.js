@@ -16,9 +16,10 @@ async function getMyForecastMessage(){
         let weatherLocation = rabotConfig.home.coordinates;
         if(currentDistanceFromHome > rabotConfig.home.max_commute_range){
             weatherLocation = currentLocation;
+            winston.log(`Setting forecast location to ${currentLocation}`);
         }
         let forecast = await getForecast(weatherLocation);
-        if(forecast.hasOwnProperty('error')){s
+        if(forecast.hasOwnProperty('error')){
             winston.error(`Error reading forecast:\n${forecast.error}`);
             return(1);
         }
