@@ -37,7 +37,7 @@ async function weatherCheck(){
         let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
         // get weather for home, unles I've travelled beyond my commute range.
         let weatherLocation = rabotConfig.home.coordinates;
-        if(currentDistanceFromHome > rabotConfig.max_commute){
+        if(currentDistanceFromHome > Number(rabotConfig.home.max_commute_range)){
             weatherLocation = currentLocation;
         }
         let forecast = await  weatherbot.getForecast(weatherLocation);
@@ -45,7 +45,7 @@ async function weatherCheck(){
             winston.error(`Error reading forecast:\n${forecast.error}`);
             return(1);
         }
-        let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state}:\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
+        let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state}:\nDstFrHm:${currentDistanceFromHome}\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
         let iconURL = forecast.icon_url;
         let slackbotResponse = await slackbot.send(`${forecastSummary}`, iconURL);
         if(slackbotResponse!=='ok'){
