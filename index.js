@@ -21,7 +21,7 @@ if(argv._.includes('weatherCheck')){
 async function locationCheck(){
     winston.log("Checking location.")
     try{
-        iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
+        await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
     }catch(e){
         winston.error('Exception caught in main()!');
         winston.error(`${e.message}`);
