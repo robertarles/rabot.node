@@ -28,11 +28,13 @@ async function locationCheck(){
         winston.error(`${e.stack}`);
         return(1);
     }
+    console.log(JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
 }
 
 async function weatherCheck(){
     winston.log("Checking weather");
     try{
+        await iCloudLocate.recordLocation('iPhone ra'); // all lies. this should now by synchronous
         let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
         let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
         // get weather for home, unles I've travelled beyond my commute range.
