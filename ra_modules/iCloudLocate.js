@@ -1,4 +1,5 @@
 'use strict';
+
 const fs = require('fs');
 const os = require('os') ;
 const rp = require('request-promise');
@@ -23,6 +24,11 @@ function loadCredentials(){
 
 
 exports.recordLocation = recordLocation
+/**
+ * TODO: problem with this function:
+ * getDevices only fires a callback, no promise returned, so it is async only.
+ * @param {*} deviceName 
+ */
 async function recordLocation(deviceName){
   var currentLocation;
   try{
@@ -30,7 +36,7 @@ async function recordLocation(deviceName){
         loadCredentials();
     }
     let savedDevice = {};
-    await icloud.getDevices(function(error, devices) {
+    icloud.getDevices(await function (error, devices) {
         var device;
         let ourDevicesSample = ['iPhone ra','iPad ra','sinspare-7','ambp','mini','iPhone AA','ambp', 'Andrea\'s iPad', 'Katelyn\'s iPhone', 'Robert’s MacBook Pro'];
         if(error){
@@ -40,9 +46,9 @@ async function recordLocation(deviceName){
               // only save the device (by deviceName) that we specified
               if(device.name.includes(deviceName)){
                 currentLocation = device.location;
+                savedDevice = device;
                 saveDeviceLocationToFile(device, deviceName);
                 device.savedLocationToFile=true;
-                savedDevice = device;
               }
             });
         }

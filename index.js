@@ -1,10 +1,10 @@
 'use strict;'
-let fs = require('fs');
-let os = require('os');
-let slackbot = require('./ra_modules/slackbot');
-let weatherbot = require('./ra_modules/weatherbot');
-let iCloudLocate = require('./ra_modules/iCloudLocate');
-let winston = require('winston');
+const fs = require('fs');
+const os = require('os');
+const slackbot = require('./ra_modules/slackbot');
+const weatherbot = require('./ra_modules/weatherbot');
+const iCloudLocate = require('./ra_modules/iCloudLocate');
+const winston = require('winston');
 
 let argv = require('minimist')(process.argv.slice(2));
 
@@ -20,15 +20,17 @@ if(argv._.includes('weatherCheck')){
 
 async function locationCheck(){
     winston.log("Checking location.")
+    let savedDevice;
     try{
-        await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
+        savedDevice = await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
     }catch(e){
         winston.error('Exception caught in main()!');
         winston.error(`${e.message}`);
         winston.error(`${e.stack}`);
         return(1);
     }
-    console.log(JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
+    console.log('file contents: \n', JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
+    console.log('savedDevice: ', savedDevice);
 }
 
 async function weatherCheck(){
