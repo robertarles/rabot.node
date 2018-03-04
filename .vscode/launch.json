@@ -7,8 +7,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch index.js",
-            "program": "${workspaceRoot}/index.js"
+            "name": "locationcheck",
+            "program": "${workspaceRoot}/index.js",
+            "args": ["locationCheck"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "weathercheck",
+            "program": "${workspaceRoot}/index.js",
+            "args": ["weatherCheck"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "interestingHereCheck",
+            "program": "${workspaceRoot}/index.js",
+            "args": ["whatsInterestingHereCheck"]
         }
     ]
 }

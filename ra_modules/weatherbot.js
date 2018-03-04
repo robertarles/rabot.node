@@ -1,3 +1,6 @@
+#! /usr/bin/env node
+'use strict';
+
 let rp = require('request-promise');
 let fs = require('fs');
 let os = require('os');
@@ -12,7 +15,7 @@ exports.getMyForecastMessage=getMyForecastMessage;
 async function getMyForecastMessage(){
     try{
         let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
-        // get weather for home, unles I've travelled beyond my commute range.
+        // get weather for home, unless I've travelled beyond my commute range.
         let weatherLocation = rabotConfig.home.coordinates;
         if(currentDistanceFromHome > rabotConfig.home.max_commute_range){
             weatherLocation = currentLocation;

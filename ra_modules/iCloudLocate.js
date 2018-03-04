@@ -22,6 +22,7 @@ function loadCredentials(){
   }
 }
 
+recordLocation('iPhone ra');
 
 exports.recordLocation = recordLocation
 /**
