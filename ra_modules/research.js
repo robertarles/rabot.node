@@ -14,8 +14,7 @@ async function whatsInterestingHere(coords){
             "Content-Type": "application/json",
             "Connection": "keep-alive"
         },
-        json: true,
-        fullResponse = true
+        json: true
     };
     return await rp(options)
         .then(response=>{
