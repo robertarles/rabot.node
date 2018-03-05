@@ -39,7 +39,7 @@ async function recordLocation(deviceName){
     let savedDevice = {};
     icloud.getDevices(await function (error, devices) {
         var device;
-        let ourDevicesSample = ['iPhone ra','iPad ra','sinspare-7','ambp','mini','iPhone AA','ambp', 'Andrea\'s iPad', 'Katelyn\'s iPhone', 'Robert’s MacBook Pro'];
+        let ourDevicesSample = ['iPhone ra','iPad ra','mini','iPhone AA', 'Andrea\'s iPad', 'Katelyn\'s iPhone'];
         if(error){
             throw({message:error, stack:''});
         }else{
