@@ -49,7 +49,14 @@ async function whatsInterestingHereCheck(){
         interestingLocation = currentLocation;
     }
     let roundedDistanceFromHome = currentDistanceFromHome.toFixed(1);
-    let interestingInfo = research.whatsInterestingHere(interestingLocation);
+    let interestingInfo = await research.whatsInterestingHere(interestingLocation);
+    let opts = {
+        text: `${interestingInfo.place}: ${interestingInfo.text}`,
+        username: "rabot.interesting",
+        channel: "metarobert.general",
+    }
+    let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
+    raslack.post(body);
 }
 
 async function weatherCheck(){
@@ -75,7 +82,7 @@ async function weatherCheck(){
             text: forecastSummary,
             username: "rabot.weather",
             channel: "metarobert.general",
-            icon_emoji: forecast.icon_url
+            icon_emoji: iconURL
         }
         let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
         raslack.post(body);
