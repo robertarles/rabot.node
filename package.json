@@ -15,7 +15,7 @@
     "express": "^4.16.2",
     "find-my-iphone": "^1.1.1",
     "minimist": "^1.2.0",
-    "raslack": "^1.1.0",
+    "raslack": "^1.1.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "winston": "^2.4.0"

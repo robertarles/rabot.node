@@ -55,7 +55,7 @@ async function whatsInterestingHereCheck(){
         username: "rabot.interesting",
         channel: "metarobert.general",
     }
-    let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
+    //let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
     raslack.post(body);
 }
 
@@ -77,15 +77,14 @@ async function weatherCheck(){
             return(1);
         }
         let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state} (DstFrHm:${roundedDistanceFromHome}mi)\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
-        let iconURL = forecast.icon_url;
         let opts = {
             text: forecastSummary,
             username: "rabot.weather",
             channel: "metarobert.general",
-            icon_emoji: iconURL
+            icon_emoji: forecast.icon_url
         }
-        let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
-        raslack.post(body);
+        //let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
+        raslack.post(opts);
     }catch(e){
         winston.error('Exception caught in main()!');
         winston.error(`${e.message}`);
