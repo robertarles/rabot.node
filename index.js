@@ -81,7 +81,7 @@ async function weatherCheck(){
             text: forecastSummary,
             username: "rabot.weather",
             channel: "metarobert.general",
-            icon_emoji: forecast.icon_url
+            icon_url: forecast.icon_url
         }
         //let body = raslack.createPostBody(opts);  // fix this. createPost body could be skipped if config is read in post();
         raslack.post(opts);

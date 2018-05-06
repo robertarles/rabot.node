@@ -1,21 +1,28 @@
 {
-  "name": "node.scratch",
+  "name": "rabot.node",
   "version": "1.0.0",
-  "description": "just a scratch area",
+  "description": "rabot daemon",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertarles/raslack.git"
+  },
+  "keywords": [
+    "node"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api.js",
     "start:api": "node api.js",
     "start:cli": "node index.js weatherCheck"
   },
-  "author": "",
+  "author": "metarobert",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
     "find-my-iphone": "^1.1.1",
     "minimist": "^1.2.0",
-    "raslack": "^1.1.4",
+    "raslack": "^1.1.6",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "winston": "^2.4.0"
