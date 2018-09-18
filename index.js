@@ -25,18 +25,19 @@ if(argv._.includes('whatsInterestingHereCheck')){
 
 
 async function locationCheck(){
-    winston.log("Checking location.")
-    let savedDevice;
-    try{
-        savedDevice = await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
-    }catch(e){
-        winston.error('Exception caught in main()!');
-        winston.error(`${e.message}`);
-        winston.error(`${e.stack}`);
-        return(1);
-    }
-    console.log('file contents: \n', JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
-    console.log('savedDevice: ', savedDevice);
+    // disabled when apple id two factor auth was turned on 2018-09-18T11:07:11+7:00
+    //winston.log("Checking location.")
+    //let savedDevice;
+    //try{
+    //    savedDevice = await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
+    //}catch(e){
+    //    winston.error('Exception caught in main()!');
+    //    winston.error(`${e.message}`);
+    //    winston.error(`${e.stack}`);
+    //    return(1);
+    //}
+    //console.log('file contents: \n', JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
+    //console.log('savedDevice: ', savedDevice);
 }
 
 async function whatsInterestingHereCheck(){
@@ -62,9 +63,11 @@ async function whatsInterestingHereCheck(){
 async function weatherCheck(){
     winston.log("Checking weather");
     try{
-        await iCloudLocate.recordLocation('iPhone ra'); // all lies. this should now by synchronous
-        let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
-        let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
+        // await iCloudLocate.recordLocation('iPhone ra'); // all lies. this should now by synchronous
+        // let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
+        // let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
+        // TODO: NO LONGER USING CURRENT LOCATION since turning on two factor aut on my apple ID 2018-09-18T10:49:58+7:00
+        let currentDistanceFromHome = 0;
         // get weather for home, unless I've travelled beyond my commute range.
         let weatherLocation = rabotConfig.home.coordinates;
         if(currentDistanceFromHome > Number(rabotConfig.home.max_commute_range)){

@@ -31,34 +31,35 @@ exports.recordLocation = recordLocation
  * @param {*} deviceName 
  */
 async function recordLocation(deviceName){
-  var currentLocation;
-  try{
-    if(icloud.apple_id === '' || icloud.password === ''){
-        loadCredentials();
-    }
-    let savedDevice = {};
-    icloud.getDevices(await function (error, devices) {
-        var device;
-        let ourDevicesSample = ['iPhone ra','iPad ra','mini','iPhone AA', 'Andrea\'s iPad', 'Katelyn\'s iPhone'];
-        if(error){
-            throw({message:error, stack:''});
-        }else{
-            devices.forEach(function(device){
-              // only save the device (by deviceName) that we specified
-              if(device.name.includes(deviceName)){
-                currentLocation = device.location;
-                savedDevice = device;
-                saveDeviceLocationToFile(device, deviceName);
-                device.savedLocationToFile=true;
-              }
-            });
-        }
-    });
-    return(savedDevice);
-  }catch(e){
-      console.error(`getLocation caught an error\n\t${e.message}`);
-      throw({message: `getLocation caught an error\n\t${e.message}`, stack: e.stack});
-  }
+  // disabled after enabling apple id two factor auth 2018-09-18T11:19:41+7:00
+  //var currentLocation;
+  //try{
+  //  if(icloud.apple_id === '' || icloud.password === ''){
+  //      loadCredentials();
+  //  }
+  //  let savedDevice = {};
+  //  icloud.getDevices(await function (error, devices) {
+  //     var device;
+  //      let ourDevicesSample = ['iPhone ra','iPad ra','mini','iPhone AA', 'Andrea\'s iPad', 'Katelyn\'s iPhone'];
+  //      if(error){
+  //          throw({message:error, stack:''});
+  //      }else{
+  //          devices.forEach(function(device){
+  //            // only save the device (by deviceName) that we specified
+  //            if(device.name.includes(deviceName)){
+  //              currentLocation = device.location;
+  //              savedDevice = device;
+  //              saveDeviceLocationToFile(device, deviceName);
+  //              device.savedLocationToFile=true;
+  //            }
+  //          });
+  //      }
+  //  });
+  //  return(savedDevice);
+  //}catch(e){
+  //    console.error(`getLocation caught an error\n\t${e.message}`);
+  //    throw({message: `getLocation caught an error\n\t${e.message}`, stack: e.stack});
+  // }
 }
 
 exports.readDeviceLocationFromFile = readDeviceLocationFromFile;
