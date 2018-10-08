@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const os = require('os') ;
+const os = require('os');
 const rp = require('request-promise');
 var icloud = require('find-my-iphone').findmyphone;
 
@@ -11,7 +11,7 @@ icloud.apple_id = '';
 icloud.password = '';
 
 exports.loadCredentials = loadCredentials;
-function loadCredentials(){
+function loadCredentials() {
   try {
     let icloudConf = JSON.parse(fs.readFileSync(icloudConfFile).toString());
     icloud.apple_id = icloudConf.apple_id;
@@ -30,7 +30,7 @@ exports.recordLocation = recordLocation
  * getDevices only fires a callback, no promise returned, so it is async only.
  * @param {*} deviceName 
  */
-async function recordLocation(deviceName){
+async function recordLocation(deviceName) {
   // disabled after enabling apple id two factor auth 2018-09-18T11:19:41+7:00
   //var currentLocation;
   //try{
@@ -63,23 +63,23 @@ async function recordLocation(deviceName){
 }
 
 exports.readDeviceLocationFromFile = readDeviceLocationFromFile;
-function readDeviceLocationFromFile(device, deviceName){
-  try{
+function readDeviceLocationFromFile(device, deviceName) {
+  try {
     let location = JSON.parse(fs.readFileSync(iphoneLocationFile));
     console.log('timestamp', location.timeStamp);
     location.date = new Date(location.timeStamp).toString();
-    return(location);
-  }catch(e){
+    return (location);
+  } catch (e) {
     console.error('saveDeviceLocation caught exception while iterating devices')
     console.error(e.message);
     console.error(e.stack);
   }
 }
 exports.saveDeviceLocationToFile = saveDeviceLocationToFile;
-function saveDeviceLocationToFile(device, deviceName){
-  try{
+function saveDeviceLocationToFile(device, deviceName) {
+  try {
     fs.writeFileSync(iphoneLocationFile, JSON.stringify(device.location));
-  }catch(e){
+  } catch (e) {
     console.error('saveDeviceLocation caught exception while iterating devices')
     console.error(e.message);
     console.error(e.stack);
@@ -87,11 +87,11 @@ function saveDeviceLocationToFile(device, deviceName){
 }
 
 exports.readDeviceLocation = readDeviceLocation;
-function readDeviceLocation(device, deviceName){
-  try{
+function readDeviceLocation(device, deviceName) {
+  try {
     let deviceLocation = JSON.parse(fs.readFileSync(iphoneLocationFile));
-    return(deviceLocation);
-  }catch(e){
+    return (deviceLocation);
+  } catch (e) {
     console.error('readDeviceLocation caught an exception')
     console.error(e.message);
     console.error(e.stack);
@@ -99,27 +99,27 @@ function readDeviceLocation(device, deviceName){
 }
 
 exports.haversine = haversine;
-function haversine (start, end) {
-    // var radii = {
-    //   km:    6371,
-    //   mile:  3960,
-    //   meter: 6371000,
-    //   nmi:   3440
-    // }
-    var R = 3960;  //miles
+function haversine(start, end) {
+  // var radii = {
+  //   km:    6371,
+  //   mile:  3960,
+  //   meter: 6371000,
+  //   nmi:   3440
+  // }
+  var R = 3960;  //miles
 
-    var dLat = toRad(end.latitude - start.latitude)
-    var dLon = toRad(end.longitude - start.longitude)
-    var lat1 = toRad(start.latitude)
-    var lat2 = toRad(end.latitude)
+  var dLat = toRad(end.latitude - start.latitude)
+  var dLon = toRad(end.longitude - start.longitude)
+  var lat1 = toRad(start.latitude)
+  var lat2 = toRad(end.latitude)
 
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2)
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-    return R * c
+  return R * c
 }
 
-function toRad (num) {
-    return num * Math.PI / 180
+function toRad(num) {
+  return num * Math.PI / 180
 }

@@ -1,72 +1,45 @@
 #! /usr/bin/env node
-'use strict;'
-
-const fs = require('fs');
-const os = require('os');
-const weatherbot = require('./ra_modules/weatherbot');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const os_1 = __importDefault(require("os"));
+let weatherbot = require('./ra_modules/weatherbot');
 const iCloudLocate = require('./ra_modules/iCloudLocate');
-const Slack = require('slack');
-const research = require('./ra_modules/research')
-const winston = require('winston');
-
-let argv = require('minimist')(process.argv.slice(2));
-
-let rabotConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/rabotConfig.json`));
-
-// prep slack comms
-let token = process.env.SLACK_BOT_TOKEN
-let slack = new Slack({ token })
-
-if (argv._.includes('locationCheck')) {
-    locationCheck();
-}
-if (argv._.includes('weatherCheck')) {
+const slack_1 = __importDefault(require("slack"));
+const winston_1 = __importDefault(require("winston"));
+// handle command line arguments
+const minimist_1 = __importDefault(require("minimist"));
+let argv = minimist_1.default(process.argv.slice(2));
+let rabotConfig = JSON.parse(fs_1.default.readFileSync(`${os_1.default.homedir()}/.rabot/rabotConfig.json`).toString());
+let slackbotToken = process.env.SLACK_BOT_TOKEN;
+if (argv._.indexOf('weatherCheck') >= 0) {
     weatherCheck();
 }
-if (argv._.includes('whatsInterestingHereCheck')) {
-    whatsInterestingHereCheck();
+if (argv._.indexOf('chatCommander') >= 0) {
+    chatCommander();
 }
-if (argv._.includes('sendText')) {
-    sendText();
-}
-
-
-async function locationCheck() {
-    // disabled when apple id two factor auth was turned on 2018-09-18T11:07:11+7:00
-    //winston.log("Checking location.")
-    //let savedDevice;
-    //try{
-    //    savedDevice = await iCloudLocate.recordLocation('iPhone ra'); // BEWARE: this DOES NOT work synchronously. 
-    //}catch(e){
-    //    winston.error('Exception caught in main()!');
-    //    winston.error(`${e.message}`);
-    //    winston.error(`${e.stack}`);
-    //    return(1);
-    //}
-    //console.log('file contents: \n', JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/iphone_ra_location.json`)));
-    //console.log('savedDevice: ', savedDevice);
-}
-
-async function whatsInterestingHereCheck() {
-    let rabotConfig = JSON.parse(fs.readFileSync(`${os.homedir()}/.rabot/rabotConfig.json`));
-
-    let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
-    let interestingLocation = rabotConfig.home.coordinates;
-    let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
-    if (currentDistanceFromHome > 3) {
-        interestingLocation = currentLocation;
+async function chatCommander() {
+    try {
+        let channelsResponse = await slack_1.default.channels.list({ token: slackbotToken });
+        let channelArr = channelsResponse.channels.filter((channel) => channel.name_normalized === 'random');
+        console.log(channelArr[0].id);
+        let channelHistory = await slack_1.default.channels.history({ token: slackbotToken, channel: channelArr[0].id });
+        console.log(channelHistory);
     }
-    let roundedDistanceFromHome = currentDistanceFromHome.toFixed(1);
-    let interestingInfo = await research.whatsInterestingHere(interestingLocation);
-
-    slack.chat.postMessage({ token: token, as_user: true, channel: '@robert', text: `${interestingInfo.place}: ${interestingInfo.text}` });
+    catch (e) {
+        console.log(e.message);
+        console.log(e.stack);
+    }
+    return (0);
 }
-
 async function weatherCheck() {
-    winston.log("Checking weather");
+    winston_1.default.info("Checking weather");
     try {
         // await iCloudLocate.recordLocation('iPhone ra'); // all lies. this should now by synchronous
-        // let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
+        let currentLocation = iCloudLocate.readDeviceLocation(); // BEWARE: this DOES get the OLD recorded location, not from the previous async line
         // let currentDistanceFromHome = iCloudLocate.haversine(rabotConfig.home.coordinates, currentLocation);
         // TODO: NO LONGER USING CURRENT LOCATION since turning on two factor aut on my apple ID 2018-09-18T10:49:58+7:00
         let currentDistanceFromHome = 0;
@@ -78,17 +51,19 @@ async function weatherCheck() {
         let roundedDistanceFromHome = currentDistanceFromHome.toFixed(1);
         let forecast = await weatherbot.getForecast(weatherLocation);
         if (forecast.hasOwnProperty('error')) {
-            s
-            winston.error(`Error reading forecast:\n${forecast.error}`);
+            winston_1.default.error(`Error reading forecast:\n${forecast.error}`);
             return (1);
         }
-        let forecastSummary = `Tomorrow in ${forecast.city}, ${forecast.state} (DstFrHm:${roundedDistanceFromHome}mi)\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
-        slack.chat.postMessage({ token: token, as_user: true, channel: '@robert', text: forecastSummary, icon_url: forecast.icon_url });
-    } catch (e) {
-        winston.error('Exception caught in main()!');
-        winston.error(`${e.message}`);
-        winston.error(`${e.stack}`);
+        let forecastSummary = `TOMORROW in ${forecast.city}, ${forecast.state} (DstFrHm:${roundedDistanceFromHome}mi)\nLow:${forecast.low.fahrenheit}\tHigh:${forecast.high.fahrenheit}\nConditions:${forecast.conditions}`;
+        // as_user allows posting to a 1:1 chat (eg @robert), but disallows the icon_url?
+        slack_1.default.chat.postMessage({ token: slackbotToken, as_user: false, channel: 'C0LJSLHFV', text: forecastSummary, icon_url: forecast.icon_url });
+        return (0);
+    }
+    catch (e) {
+        winston_1.default.error('Exception caught in main()!');
+        winston_1.default.error(`${e.message}`);
+        winston_1.default.error(`${e.stack}`);
         return (1);
     }
 }
-
+//# sourceMappingURL=index.js.map
